@@ -12,3 +12,14 @@ main {
   height: 100vh;
   margin: 0;
 }
+
+.styleDetail {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  border-radius: 8px;
+  background-color: #222;
+  color: #ddd;
+  font-size: 12px;
+  padding: 8px;
+}

@@ -75,4 +75,35 @@ class Letter extends React.Component {
   }
 }
 
+class StyleDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getStyle = this.getStyle.bind(this);
+  }
+
+  getStyle() {
+    const paragraph = document.querySelector('p');
+    const styleArray = paragraph.getAttribute('style').split(';').map(rule => rule.split(':'));;
+    styleArray.pop();
+    return styleArray;
+  }
+
+  render() {
+    const style = this.getStyle();
+    const stylesListed = style.map(rulePair => {
+      return (
+        <tr key={rulePair[0]}><td>{rulePair[0]}:</td><td>{rulePair[1]}</td></tr>
+      );
+    });
+    return (
+      <table className="styleDetail">
+        <tbody>
+          {stylesListed}
+        </tbody>
+      </table>
+    );
+  }
+}
+
 ReactDOM.render(<Letter />, document.querySelector('main'));
+ReactDOM.render(<StyleDetail />, document.querySelector('header'));
