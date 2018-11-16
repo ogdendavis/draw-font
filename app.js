@@ -1,13 +1,15 @@
 'use strict';
 
-class Letter extends React.Component {
+class Text extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       letter: '',
+      lorem: false,
     }
     this.randomRange = this.randomRange.bind(this);
-    this.randomBool = this.randomBool.bind(this)
+    this.randomBool = this.randomBool.bind(this);
+    this.toggleLorem = this.toggleLorem.bind(this);
     this.pickFontFamily = this.pickFontFamily.bind(this);
     this.pickFontSize = this.pickFontSize.bind(this);
     this.pickFontStyle = this.pickFontStyle.bind(this);
@@ -22,7 +24,7 @@ class Letter extends React.Component {
     // Eventually, I want users to be able to go to a subdirectory of the top-
     // level domain to select which letter they want to be drawn
     // (so drawfont.com/j would draw a j).
-    if (this.state.letter === '') {
+    if (this.state.letter === '' && this.state.lorem === false) {
       const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
       this.setState( { letter: newLetter } )
     }
@@ -128,8 +130,12 @@ class Letter extends React.Component {
     }
   }
 
-  render() {
+  toggleLorem() {
+    const newLorem = !this.state.lorem
+    this.setState( { lorem: newLorem } );
+  }
 
+  render() {
     const style = {
       // Remember that you always need to pass an empty string to pickColor,
       // and add the # before the returned value, which is just a random
@@ -144,9 +150,31 @@ class Letter extends React.Component {
       textShadow: this.pickShadow(),
     }
 
+    const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+    const content = this.state.lorem ? lorem : this.state.letter;
+
     return (
-      <p style = {style}>{this.state.letter}</p>
+      <div className = "container">
+        <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
+        <p style = {style}>{content}</p>
+      </div>
     );
+  }
+}
+
+class LoremButton extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const content = this.props.loremOn ? 'View one letter' : 'View paragraph';
+    return (
+      <button className = 'loremButton' onClick = {this.props.toggle}>
+        {content}
+      </button>
+    )
   }
 }
 
@@ -193,5 +221,5 @@ class StyleDetail extends React.Component {
   }
 }
 
-ReactDOM.render(<Letter />, document.querySelector('main'));
+ReactDOM.render(<Text />, document.querySelector('main'));
 ReactDOM.render(<StyleDetail />, document.querySelector('header'));

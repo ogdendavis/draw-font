@@ -26,3 +26,10 @@ main {
   font-size: 12px;
   padding: 8px;
 }
+
+.loremButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+}
