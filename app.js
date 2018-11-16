@@ -6,6 +6,7 @@ class Letter extends React.Component {
     this.state = {
       letter: '',
     }
+    this.randomRange = this.randomRange.bind(this);
     this.pickFontFamily = this.pickFontFamily.bind(this);
     this.pickFontSize = this.pickFontSize.bind(this);
     this.pickFontStyle = this.pickFontStyle.bind(this);
@@ -16,54 +17,56 @@ class Letter extends React.Component {
   }
 
   componentDidMount() {
-    // Generate random letter to use in drawing
-    // Eventually, I want users to be able to go to a subdirectory of the top-
-    // level domain to select which letter they want to be drawn
-    // (so drawfont.com/j would draw a j).
     if (this.state.letter === '') {
       const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 52)];
       this.setState( { letter: newLetter } )
     }
   }
 
+  randomRange(a, b) {
+    const max = a < b ? b : a;
+    const min = max === b ? a : b;
+    const diff = max - min;
+    return Math.floor(Math.random() * (diff + 1)) + min;
+  }
+
   pickFontFamily() {
     const genericFamilies = ['serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
-    return genericFamilies[Math.floor(Math.random() * genericFamilies.length)];
+    const max = genericFamilies.length - 1;
+    return genericFamilies[this.randomRange(0, max)];
   }
 
   pickFontSize() {
-    const maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const pickedHeight = Math.floor(Math.random() * (maxHeight - 30)) + 10;
-    return `${pickedHeight}px`;
+    const maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
+    return `${this.randomRange(10, maxHeight)}px`;
   }
 
   pickFontStyle() {
     const styles = ['normal', 'italic', 'normal', 'oblique']
-    const pickedStyle = styles[Math.floor(Math.random() * styles.length)];
+    const pickedStyle = styles[this.randomRange(0, styles.length - 1)];
     if (pickedStyle === 'oblique') {
-      const degrees = Math.floor(Math.random() * 51) - 20; //range -20 to +30
-      return `${pickedStyle} ${degrees}deg`;
+      return `${pickedStyle} ${this.randomRange(-20, 30)}deg`;
     }
     return pickedStyle;
   }
 
   pickFontWeight() {
-    return Math.floor(Math.random() * 1000) + 1;
+    return this.randomRange(1, 1000);
   }
 
   pickLineHeight() {
-    return (Math.floor(Math.random() * 7) + 1) / 2;
+    return this.randomRange(1, 7) / 2;
   }
 
   pickColor(hex) {
-    hex += '0123456789abcdef'[Math.floor(Math.random() * 16)];
+    hex += '0123456789abcdef'[this.randomRange(0, 15)];
     return hex.length === 6 ? hex : this.pickColor(hex);
   }
 
   pickTransform() {
     const transform = Math.random() >= 0.7 ? true : false;
     if (transform) {
-      return ['uppercase', 'lowercase', 'capitalize', 'full-width'][Math.floor(Math.random() * 4)]
+      return ['uppercase', 'lowercase', 'capitalize', 'full-width'][this.randomRange(0,3)]
     }
     else {
       return 'none';
@@ -73,9 +76,9 @@ class Letter extends React.Component {
   pickShadow() {
     const shadow = Math.random() >= 0.7 ? true : false;
     if (shadow) {
-      const hOff = Math.floor(Math.random() * 5);
-      const vOff = Math.floor(Math.random() * 5);
-      const blur = Math.floor(Math.random() * 5);
+      const hOff = this.randomRange(0,5);
+      const vOff = this.randomRange(0,5);
+      const blur = this.randomRange(0,5);
 
       let color = '#222';
       const weirdColor = Math.random() >= 0.7 ? true : false;
