@@ -44,7 +44,7 @@ class Text extends React.Component {
       // When one letter displayed, we'll size in em. When a paragraph, we'll
       // size in px. Use that to check and switch.
       if (this.state.style.fontSize.includes('em') && this.state.lorem === false) {
-        //this.convertFontSize()
+        this.convertFontSize()
         console.log('font is in em and one letter shown')
       }
       else if (this.state.style.fontSize.includes('px') && this.state.lorem === true) {
@@ -95,7 +95,7 @@ class Text extends React.Component {
     // Get current font size (as string including 'em' or 'px')
     const currentFontSize = this.state.style.fontSize;
     // If we've already converted it once (or more), just switch them back
-    if (this.state.oldFontSize !== false) {
+    if (typeof this.state.oldFontSize === 'string') {
       console.log('oldFontSize exists!')
       console.log(this.state.oldFontSize)
       const returnFontSize = this.state.oldFontSize;
@@ -118,13 +118,22 @@ class Text extends React.Component {
     if (currentFontSize.includes('px')) {
       // Convert the font size string to a number
       const numericFontSize = Number(currentFontSize.slice(0,-2));
-      const newFontSize = `${Math.floor(numericFontSize / pxPerEm)}em`;
+      let newFontSize = `${Math.floor(numericFontSize / pxPerEm)}em`;
+      if (newFontSize === '0em') {
+        newFontSize = '0.5em';
+      }
       this.setState({
         style: {... this.state.style, fontSize: newFontSize},
         oldFontSize: currentFontSize,
       });
+      window.setTimeout(() => {console.log(this.state.style.fontSize, this.state.oldFontSize)});
     }
-
+    else { // We're assuming that if it doesn't have px, it'll be em
+      // No work needed for this case in current implementation, because we
+      // know that page will always start in one-letter display with size in px,
+      // so whenever we're switching from paragraph display with size in em, we
+      // will always have an oldFontSize to use.
+    }
   }
 
   pickFontStyle() {
