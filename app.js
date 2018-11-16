@@ -12,6 +12,7 @@ class Letter extends React.Component {
     this.pickFontWeight = this.pickFontWeight.bind(this);
     this.pickColor = this.pickColor.bind(this);
     this.pickTransform = this.pickTransform.bind(this);
+    this.pickShadow = this.pickShadow.bind(this);
   }
 
   componentDidMount() {
@@ -60,10 +61,30 @@ class Letter extends React.Component {
   }
 
   pickTransform() {
-    const transform = Math.random() >= 0.5 ? true : false;
+    const transform = Math.random() >= 0.7 ? true : false;
     if (transform) {
       return ['uppercase', 'lowercase', 'capitalize', 'full-width'][Math.floor(Math.random() * 4)]
-    } else {
+    }
+    else {
+      return 'none';
+    }
+  }
+
+  pickShadow() {
+    const shadow = Math.random() >= 0.7 ? true : false;
+    if (shadow) {
+      const hOff = Math.floor(Math.random() * 5);
+      const vOff = Math.floor(Math.random() * 5);
+      const blur = Math.floor(Math.random() * 5);
+
+      let color = '#222';
+      const weirdColor = Math.random() >= 0.7 ? true : false;
+      if (weirdColor) {
+        color = `#${this.pickColor('')}`;
+      }
+      return `${hOff}px ${vOff}px ${blur}px ${color}`
+    }
+    else {
       return 'none';
     }
   }
@@ -78,6 +99,7 @@ class Letter extends React.Component {
       fontWeight: this.pickFontWeight(),
       lineHeight: this.pickLineHeight(),
       textTransform: this.pickTransform(),
+      textShadow: this.pickShadow(),
     }
 
     return (
