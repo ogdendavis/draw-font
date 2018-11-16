@@ -30,9 +30,10 @@ of CSS rules that were generated on any given page load.
 
 - Current features:
   - Shows CSS declarations made to achieve font result
+  - Option to display Lorem Ipsum text in generated font
+  - Size scaling when switching back and forth between one letter and lorem ipsum
 
 - Future features:
-  - Option to display Lorem Ipsum text in generated font
   - Option to display Lorem Ipsum text in which each character is rendered in a
   different random font
   - Option to navigate to a subdirectory to control the text that is displayed
