@@ -6,6 +6,7 @@ class Text extends React.Component {
     this.state = {
       letter: '',
       lorem: false,
+      style: false,
     }
     this.randomRange = this.randomRange.bind(this);
     this.randomBool = this.randomBool.bind(this);
@@ -17,6 +18,7 @@ class Text extends React.Component {
     this.pickColor = this.pickColor.bind(this);
     this.pickTransform = this.pickTransform.bind(this);
     this.pickShadow = this.pickShadow.bind(this);
+    this.setStyle = this.setStyle.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +29,9 @@ class Text extends React.Component {
     if (this.state.letter === '' && this.state.lorem === false) {
       const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
       this.setState( { letter: newLetter } )
+    }
+    if (this.state.style === false) {
+      this.setStyle();
     }
   }
 
@@ -135,7 +140,7 @@ class Text extends React.Component {
     this.setState( { lorem: newLorem } );
   }
 
-  render() {
+  setStyle() {
     const style = {
       // Remember that you always need to pass an empty string to pickColor,
       // and add the # before the returned value, which is just a random
@@ -149,15 +154,19 @@ class Text extends React.Component {
       textTransform: this.pickTransform(),
       textShadow: this.pickShadow(),
     }
+    this.setState( { style: style } );
+  }
 
+  render() {
     const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
     const content = this.state.lorem ? lorem : this.state.letter;
+    const style = this.state.style === false ? {} : this.state.style;
 
     return (
       <div className = "container">
         <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
-        <StyleDetail style = {style} />
+        <StyleDetail paraStyle = {style} />
         <p style = {style}>{content}</p>
       </div>
     );
@@ -185,12 +194,17 @@ class StyleDetail extends React.Component {
   }
 
   render() {
+    // On first render, style object (paraStyle) will not be an object at all,
+    // but instead it will be false. If that's the case, return early!
+    if (this.props.paraStyle === false) {
+      return null;
+    }
     // Loop through the style object passed in as a prop, and create a table
     // row for each rule.
     const stylesListed = []
-    for (let key in this.props.style) {
+    for (let key in this.props.paraStyle) {
       stylesListed.push(
-        <tr key={key}><td>{key}:</td><td>{this.props.style[key]}</td></tr>
+        <tr key={key}><td>{key}:</td><td>{this.props.paraStyle[key]}</td></tr>
       );
     }
     return (
