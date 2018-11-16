@@ -7,12 +7,14 @@ class Text extends React.Component {
       letter: '',
       lorem: false,
       style: false,
+      oldFontSize: false,
     }
     this.randomRange = this.randomRange.bind(this);
     this.randomBool = this.randomBool.bind(this);
     this.toggleLorem = this.toggleLorem.bind(this);
     this.pickFontFamily = this.pickFontFamily.bind(this);
     this.pickFontSize = this.pickFontSize.bind(this);
+    this.convertFontSize = this.convertFontSize.bind(this);
     this.pickFontStyle = this.pickFontStyle.bind(this);
     this.pickFontWeight = this.pickFontWeight.bind(this);
     this.pickColor = this.pickColor.bind(this);
@@ -32,6 +34,23 @@ class Text extends React.Component {
     }
     if (this.state.style === false) {
       this.setStyle();
+    }
+  }
+
+  componentDidUpdate() {
+    // When the page updates, we need to check to make sure that the size of
+    // the text is appropriate for the amount of text displayed.
+    if (this.state.style !== false) {
+      // When one letter displayed, we'll size in em. When a paragraph, we'll
+      // size in px. Use that to check and switch.
+      if (this.state.style.fontSize.includes('em') && this.state.lorem === false) {
+        //this.convertFontSize()
+        console.log('font is in em and one letter shown')
+      }
+      else if (this.state.style.fontSize.includes('px') && this.state.lorem === true) {
+        this.convertFontSize()
+        console.log('font is in px and paragraph shown')
+      }
     }
   }
 
@@ -59,9 +78,53 @@ class Text extends React.Component {
   }
 
   pickFontSize() {
-    // Pick a random font size, from 10px to 20px less than the viewport height
+    // Pick a random font size between 10px and viewport height minus 20px.
+    // This size is appropriate for a one-letter view, which is the default
+    // when the page is loaded. If view is switched to paragraph,
+    // convertFontSize will switch it to an appropriate height
     const maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
     return `${this.randomRange(10, maxHeight)}px`;
+  }
+
+  convertFontSize() {
+    // Font size is in px when one letter is displayed, and in em when a
+    // paragraph is displayed. We need to scale the size up or down when
+    // switching between how much font is displayed in order to make the text
+    // viewable. A relatively big px size should switch to a relatively big
+    // em size, and vice-versa
+    // Get current font size (as string including 'em' or 'px')
+    const currentFontSize = this.state.style.fontSize;
+    // If we've already converted it once (or more), just switch them back
+    if (this.state.oldFontSize !== false) {
+      console.log('oldFontSize exists!')
+      console.log(this.state.oldFontSize)
+      const returnFontSize = this.state.oldFontSize;
+      this.setState({
+        style: {...this.state.style, fontSize: returnFontSize},
+        oldFontSize: currentFontSize,
+      });
+      return;
+    }
+    // If we haven't already converted, perform the correct conversion, update
+    // state.style with the new font size, and record the previous size in
+    // state.oldFontSize so we can switch back if needed
+    // Start with getting viewport size so we can convert it down to a
+    // relatively scaled em size
+    const maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
+    const pxPerEm = maxHeight / 3;
+    let newFontSize = '';
+    // Start with the most common case -- switching from px to em. Should be
+    // between 0.5 and 3em
+    if (currentFontSize.includes('px')) {
+      // Convert the font size string to a number
+      const numericFontSize = Number(currentFontSize.slice(0,-2));
+      const newFontSize = `${Math.floor(numericFontSize / pxPerEm)}em`;
+      this.setState({
+        style: {... this.state.style, fontSize: newFontSize},
+        oldFontSize: currentFontSize,
+      });
+    }
+
   }
 
   pickFontStyle() {
@@ -136,8 +199,7 @@ class Text extends React.Component {
   }
 
   toggleLorem() {
-    const newLorem = !this.state.lorem
-    this.setState( { lorem: newLorem } );
+    this.setState( { lorem: !this.state.lorem } );
   }
 
   setStyle() {

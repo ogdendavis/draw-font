@@ -16,6 +16,11 @@ main {
   margin: 0;
 }
 
+p {
+  margin: auto;
+  max-width: 90% !important;
+}
+
 .styleDetail {
   position: absolute;
   top: 8px;
@@ -31,5 +36,4 @@ main {
   position: absolute;
   top: 8px;
   right: 8px;
-
 }
