@@ -157,6 +157,7 @@ class Text extends React.Component {
     return (
       <div className = "container">
         <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
+        <StyleDetail style = {style} />
         <p style = {style}>{content}</p>
       </div>
     );
@@ -181,35 +182,17 @@ class LoremButton extends React.Component {
 class StyleDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.getStyle = this.getStyle.bind(this);
-  }
-
-  getStyle() {
-    // This function assumes that the paragraph styled by the Letter component
-    // is the only paragraph on the page. If that's not the case, you'll need
-    // to rewrite the querySelector to find the right paragrah
-    const paragraph = document.querySelector('p');
-    // Take the style of the paragraph, and first split it into an array with
-    // each rule as its own object. Then take that array and map over it,
-    // splitting it into an array of two strings: the first being the CSS
-    // property being styled, and the second being the value for that property
-    const styleArray = paragraph.getAttribute('style').split(';').map(rule => rule.split(':'));;
-    // The construction of the array results in an empty first value -- get rid
-    // of it!
-    styleArray.pop();
-    return styleArray;
   }
 
   render() {
-    // Get an array of arrays representing the CSS rules on the paragraph
-    const style = this.getStyle();
-    // Map over the array to create table entries for each rule. The first item
-    // in each array is the CSS property, and the second is the value
-    const stylesListed = style.map(rulePair => {
-      return (
-        <tr key={rulePair[0]}><td>{rulePair[0]}:</td><td>{rulePair[1]}</td></tr>
+    // Loop through the style object passed in as a prop, and create a table
+    // row for each rule.
+    const stylesListed = []
+    for (let key in this.props.style) {
+      stylesListed.push(
+        <tr key={key}><td>{key}:</td><td>{this.props.style[key]}</td></tr>
       );
-    });
+    }
     return (
       // Now draw the whole table, inserting the entries for each rule
       <table className="styleDetail">
@@ -222,4 +205,3 @@ class StyleDetail extends React.Component {
 }
 
 ReactDOM.render(<Text />, document.querySelector('main'));
-ReactDOM.render(<StyleDetail />, document.querySelector('header'));
