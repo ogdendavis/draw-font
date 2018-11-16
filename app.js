@@ -7,6 +7,7 @@ class Letter extends React.Component {
       letter: '',
     }
     this.randomRange = this.randomRange.bind(this);
+    this.randomBool = this.randomBool.bind(this)
     this.pickFontFamily = this.pickFontFamily.bind(this);
     this.pickFontSize = this.pickFontSize.bind(this);
     this.pickFontStyle = this.pickFontStyle.bind(this);
@@ -22,7 +23,7 @@ class Letter extends React.Component {
     // level domain to select which letter they want to be drawn
     // (so drawfont.com/j would draw a j).
     if (this.state.letter === '') {
-      const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 52)];
+      const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
       this.setState( { letter: newLetter } )
     }
   }
@@ -34,6 +35,13 @@ class Letter extends React.Component {
     const min = max === b ? a : b;
     const diff = max - min;
     return Math.floor(Math.random() * (diff + 1)) + min;
+  }
+
+  randomBool(percent = 50) {
+    // Returns a boolean. By default, there's an even chance that it will
+    // return true or false. However, you can pass an integer between 0 and 100
+    // that will represent the percent likelihood of the function returning true
+    return Math.random() >= (percent / 100) ? false : true;
   }
 
   pickFontFamily() {
@@ -51,14 +59,18 @@ class Letter extends React.Component {
 
   pickFontStyle() {
     // Pick a random font style, with a 50% chance of normal
-    const styles = ['normal', 'italic', 'normal', 'oblique']
-    const pickedStyle = styles[this.randomRange(0, styles.length - 1)];
-    if (pickedStyle === 'oblique') {
-      // If oblique is selected, pick a random degree of inclination, from
-      // -20deg to 30deg
-      return `${pickedStyle} ${this.randomRange(-20, 30)}deg`;
+    if (this.randomBool()) {
+      return 'normal'
     }
-    return pickedStyle;
+    // If my math is right, this else if and else together should mean that we
+    // have an equal shot of getting italic or oblique as the style (50/50 at
+    // this point, 25% each overall chance)
+    else if (this.randomBool()) {
+      return 'italic';
+    }
+    else {
+      return `oblique ${this.randomRange(-20, 30)}deg`
+    }
   }
 
   pickFontWeight() {
@@ -82,8 +94,8 @@ class Letter extends React.Component {
 
   pickTransform() {
     // Returns a string to use in the text-transform CSS property.
-    // There is a 70% chance that this function will NOT return a transformation
-    const transform = Math.random() >= 0.7 ? true : false;
+    // There is a 30% chance that this function will return a transformation
+    const transform = this.randomBool(30);
     if (transform) {
       return ['uppercase', 'lowercase', 'capitalize', 'full-width'][this.randomRange(0,3)]
     }
@@ -94,8 +106,8 @@ class Letter extends React.Component {
 
   pickShadow() {
     // Returns a string to use in the text-shadow CSS property
-    // There is a 70% chance that this function will NOT return a shadow
-    const shadow = Math.random() >= 0.7 ? true : false;
+    // There is a 30% chance that this function will return a shadow
+    const shadow = this.randomBool(30);
     if (shadow) { // This block only executes if a shadow is to be returned
       // Both offset values and blur will be between 0px and 5px (inclusive)
       const hOff = this.randomRange(0,5);
@@ -105,7 +117,7 @@ class Letter extends React.Component {
       // Default shadow color is a dark gray (almost black), but...
       let color = '#222';
       // ...there's a 30% chance that we'll pick a random hex color instead!
-      const weirdColor = Math.random() >= 0.7 ? true : false;
+      const weirdColor = this.randomBool(30);
       if (weirdColor) {
         color = `#${this.pickColor('')}`;
       }
