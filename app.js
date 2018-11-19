@@ -21,6 +21,7 @@ class Text extends React.Component {
     this.pickTransform = this.pickTransform.bind(this);
     this.pickShadow = this.pickShadow.bind(this);
     this.setStyle = this.setStyle.bind(this);
+    this.newLetter = this.newLetter.bind(this);
   }
 
   componentDidMount() {
@@ -29,8 +30,7 @@ class Text extends React.Component {
     // level domain to select which letter they want to be drawn
     // (so drawfont.com/j would draw a j).
     if (this.state.letter === '' && this.state.lorem === false) {
-      const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
-      this.setState( { letter: newLetter } )
+      this.newLetter();
     }
     if (this.state.style === false) {
       this.setStyle();
@@ -228,6 +228,12 @@ class Text extends React.Component {
     this.setState( { style: style } );
   }
 
+  newLetter() {
+    // Used on initial load, and when new font button is clicked
+    const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
+    this.setState( { letter: newLetter } )
+  }
+
   render() {
     const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
@@ -238,7 +244,7 @@ class Text extends React.Component {
       <div className = "container">
         <div className = "buttonContainer">
           <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
-          <button className = "newFontButton" onClick = {() => {window.location.reload()}}>
+          <button className = "newFontButton" onClick = {() => {this.setStyle(); this.newLetter();}}>
             New font
           </button>
         </div>
