@@ -41,3 +41,4 @@ of CSS rules that were generated on any given page load.
   - Support for additional font families and/or additional CSS selectors
   - Show generic font families as they would appear on different operating
   systems and devices
+  - Change page background when font color is too close
