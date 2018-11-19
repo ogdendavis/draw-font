@@ -42,3 +42,6 @@ of CSS rules that were generated on any given page load.
   - Show generic font families as they would appear on different operating
   systems and devices
   - Change page background when font color is too close
+
+- Bug fixes
+  - Font size change sometimes gets "maximum update depth exceeded" error
