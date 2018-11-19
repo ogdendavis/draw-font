@@ -236,7 +236,12 @@ class Text extends React.Component {
 
     return (
       <div className = "container">
-        <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
+        <div className = "buttonContainer">
+          <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
+          <button className = "newFontButton" onClick = {() => {window.location.reload()}}>
+            New font
+          </button>
+        </div>
         <StyleDetail paraStyle = {style} />
         <p style = {style}>{content}</p>
       </div>
