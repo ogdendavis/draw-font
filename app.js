@@ -213,11 +213,25 @@ class Text extends React.Component {
   }
 
   setStyle() {
+    // Setup to pick font color and adjust background, if needed
+    const textColor = this.pickColor('');
+    const body = document.querySelector('body');
+    // Remove reversed class from body -- won't throw an error if the class
+    // isn't applied to the body, so safe to do without checking.
+    body.classList.remove('bg--reversed');
+
+    // Test if font color is light, and if so, re-apply the bg--reversed class
+    const lightColorCutoff = 0xafffff;
+    if (parseInt(textColor, 16) > lightColorCutoff) {
+      console.log('light font');
+      body.classList.add('bg--reversed');
+    }
+
     const style = {
       // Remember that you always need to pass an empty string to pickColor,
       // and add the # before the returned value, which is just a random
       // six-digit hexadecimal number
-      color: `#${this.pickColor('')}`,
+      color: `#${textColor}`,
       fontFamily: this.pickFontFamily(),
       fontSize: this.pickFontSize(),
       fontStyle: this.pickFontStyle(),

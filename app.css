@@ -2,6 +2,7 @@ html, body {
   background-color: var(--white);
   margin: 0;
   padding: 0;
+  transition: 0.3s;
   --rounded: 8px;
   --black: #222;
   --white: #ddd;
@@ -21,10 +22,15 @@ p {
   max-width: 90%;
 }
 
+.bg--reversed {
+  background-color: var(--black);
+}
+
 .styleDetail {
   position: absolute;
   top: 8px;
   left: 8px;
+  border: 1px solid var(--white);
   border-radius: var(--rounded);
   background-color: var(--black);
   color: var(--white);
