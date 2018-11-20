@@ -22,7 +22,6 @@ class Text extends React.Component {
     this.pickShadow = this.pickShadow.bind(this);
     this.setStyle = this.setStyle.bind(this);
     this.newLetter = this.newLetter.bind(this);
-    this.newFont = this.newFont.bind(this);
   }
 
   componentDidMount() {
@@ -46,11 +45,9 @@ class Text extends React.Component {
       // size in px. Use that to check and switch.
       if (this.state.style.fontSize.includes('em') && this.state.lorem === false) {
         this.convertFontSize()
-        console.log('font is in em and one letter shown')
       }
       else if (this.state.style.fontSize.includes('px') && this.state.lorem === true) {
         this.convertFontSize()
-        console.log('font is in px and paragraph shown')
       }
     }
   }
@@ -97,8 +94,6 @@ class Text extends React.Component {
     const currentFontSize = this.state.style.fontSize;
     // If we've already converted it once (or more), just switch them back
     if (typeof this.state.oldFontSize === 'string') {
-      console.log('oldFontSize exists!')
-      console.log(this.state.oldFontSize)
       const returnFontSize = this.state.oldFontSize;
       this.setState({
         style: {...this.state.style, fontSize: returnFontSize},
@@ -113,28 +108,28 @@ class Text extends React.Component {
     // relatively scaled em size
     const maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
     const pxPerEm = maxHeight / 3;
+    // Convert the font size string to a number
+    const numericFontSize = Number(currentFontSize.slice(0,-2));
+    // String to hold new size, calculated below
     let newFontSize = '';
-    // Start with the most common case -- switching from px to em. Should be
-    // between 0.5 and 3em
+    // If px, switch to em between 0 and 3 (set by pxPerEm above)
     if (currentFontSize.includes('px')) {
-      // Convert the font size string to a number
-      const numericFontSize = Number(currentFontSize.slice(0,-2));
-      let newFontSize = `${Math.floor(numericFontSize / pxPerEm)}em`;
+      newFontSize = `${Math.floor(numericFontSize / pxPerEm)}em`;
+      // Check for 0 values, and fix
       if (newFontSize === '0em') {
         newFontSize = '0.5em';
       }
-      this.setState({
-        style: {... this.state.style, fontSize: newFontSize},
-        oldFontSize: currentFontSize,
-      });
-      window.setTimeout(() => {console.log(this.state.style.fontSize, this.state.oldFontSize)});
     }
-    else { // We're assuming that if it doesn't have px, it'll be em
-      // No work needed for this case in current implementation, because we
-      // know that page will always start in one-letter display with size in px,
-      // so whenever we're switching from paragraph display with size in em, we
-      // will always have an oldFontSize to use.
+    else {
+      // If font size isn't in px, it must be in em so we need to convert it
+      // back to px
+      newFontSize = `${numericFontSize * pxPerEm}px`;
     }
+    // Now that we have the new size, set the state, adding old font size
+    this.setState({
+      style: {... this.state.style, fontSize: newFontSize},
+      oldFontSize: currentFontSize,
+    });
   }
 
   pickFontStyle() {
@@ -223,7 +218,6 @@ class Text extends React.Component {
     // Test if font color is light, and if so, re-apply the bg--reversed class
     const lightColorCutoff = 0xafffff;
     if (parseInt(textColor, 16) > lightColorCutoff) {
-      console.log('light font');
       body.classList.add('bg--reversed');
     }
 
@@ -240,21 +234,15 @@ class Text extends React.Component {
       textTransform: this.pickTransform(),
       textShadow: this.pickShadow(),
     }
-    this.setState( { style: style } );
+    // We're completely resetting the font style, so in addition to setting the
+    // style we just made, we should get rid of the old font size
+    this.setState( { style: style, oldFontSize: false } );
   }
 
   newLetter() {
     // Used on initial load, and when new font button is clicked
     const newLetter = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'[this.randomRange(0,51)];
     this.setState( { letter: newLetter } )
-  }
-
-  newFont() {
-    this.setStyle();
-    this.newLetter();
-    if (this.state.lorem === true) {
-      this.setState( { lorem: false, oldFontSize: false } );
-    }
   }
 
   render() {
@@ -267,7 +255,7 @@ class Text extends React.Component {
       <div className = "container">
         <div className = "buttonContainer">
           <LoremButton loremOn = {this.state.lorem} toggle = {this.toggleLorem} />
-          <button className = "newFontButton" onClick = {this.newFont}>
+          <button className = "newFontButton" onClick = {this.setStyle}>
             New font
           </button>
         </div>
