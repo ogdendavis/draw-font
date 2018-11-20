@@ -239,7 +239,7 @@ class Text extends React.Component {
     this.setStyle();
     this.newLetter();
     if (this.state.lorem === true) {
-      this.setState( { lorem: false } );
+      this.setState( { lorem: false, oldFontSize: false } );
     }
   }
 
