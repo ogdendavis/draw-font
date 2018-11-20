@@ -17,7 +17,7 @@ class Text extends React.Component {
     this.convertFontSize = this.convertFontSize.bind(this);
     this.pickFontStyle = this.pickFontStyle.bind(this);
     this.pickFontWeight = this.pickFontWeight.bind(this);
-    this.pickColor = this.pickColor.bind(this);
+    this.hexString = this.hexString.bind(this);
     this.pickTransform = this.pickTransform.bind(this);
     this.pickShadow = this.pickShadow.bind(this);
     this.setStyle = this.setStyle.bind(this);
@@ -163,12 +163,12 @@ class Text extends React.Component {
     return this.randomRange(1, 7) / 2;
   }
 
-  pickColor(hex) {
+  hexString(hex) {
     // This function MUST be passed an empty string when called!
     // It recursively selects a random value from the string of hex characters
     // until it has picked 6, to indicate a random hexadecimal color value
     hex += '0123456789abcdef'[this.randomRange(0, 15)];
-    return hex.length === 6 ? hex : this.pickColor(hex);
+    return hex.length === 6 ? hex : this.hexString(hex);
     // When using this return in CSS, you'll need to add the initial #
   }
 
@@ -199,7 +199,7 @@ class Text extends React.Component {
       // ...there's a 30% chance that we'll pick a random hex color instead!
       const weirdColor = this.randomBool(30);
       if (weirdColor) {
-        color = `#${this.pickColor('')}`;
+        color = `#${this.hexString('')}`;
       }
       return `${hOff}px ${vOff}px ${blur}px ${color}`
     }
@@ -214,7 +214,7 @@ class Text extends React.Component {
 
   setStyle() {
     // Setup to pick font color and adjust background, if needed
-    const textColor = this.pickColor('');
+    const textColor = this.hexString('');
     const body = document.querySelector('body');
     // Remove reversed class from body -- won't throw an error if the class
     // isn't applied to the body, so safe to do without checking.
@@ -228,7 +228,7 @@ class Text extends React.Component {
     }
 
     const style = {
-      // Remember that you always need to pass an empty string to pickColor,
+      // Remember that you always need to pass an empty string to hexString,
       // and add the # before the returned value, which is just a random
       // six-digit hexadecimal number
       color: `#${textColor}`,
