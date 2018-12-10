@@ -155,8 +155,8 @@ class Text extends React.Component {
   }
 
   pickLineHeight() {
-    // Pick a random line height, from 0.5 to 3.5
-    return this.randomRange(1, 7) / 2;
+    // Pick a random line height, from 1 to 2.5
+    return this.randomRange(2, 5) / 2;
   }
 
   hexString(hex) {
