@@ -8,7 +8,7 @@ single (random) letter of that font.
 I think the cool thing about this is that it designates fonts only as generic
 families, meaning that the actual result of the same CSS declarations will
 display differently on different machines. For example, the "fantasy" font on
-iOS in Safari looks very different from the "fantasy" font in Ubuntu on Firefox.
+iOS in Safari looks very different from the "fantasy" font on Ubuntu in Firefox.
 
 ## But... why?
 
@@ -32,6 +32,7 @@ of CSS rules that were generated on any given page load.
   - Shows CSS declarations made to achieve font result
   - Option to display Lorem Ipsum text in generated font
   - Size scaling when switching back and forth between one letter and lorem ipsum
+  - Change page background color for light/dark fonts
 
 - Future features:
   - Option to display Lorem Ipsum text in which each character is rendered in a
@@ -41,4 +42,3 @@ of CSS rules that were generated on any given page load.
   - Support for additional font families and/or additional CSS selectors
   - Show generic font families as they would appear on different operating
   systems and devices
-  - Change page background when font color is too close
